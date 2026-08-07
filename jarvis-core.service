@@ -1,0 +1,51 @@
+[Unit]
+Description=JARVIS Core AI Assistant (Telegram)
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=riziki
+Group=riziki
+WorkingDirectory=/home/riziki/workspace/projects/jarvis
+Environment="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+Environment="HOME=/home/riziki"
+Environment="PYTHONUNBUFFERED=1"
+
+# Load environment variables
+EnvironmentFile=-/home/riziki/.env
+EnvironmentFile=-/home/riziki/workspace/projects/jarvis/.env
+
+# JARVIS Core Configuration
+Environment="TELEGRAM_TOKEN=YOUR_TELEGRAM_BOT_TOKEN"
+Environment="GROQ_API_KEY=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"
+Environment="GROQ_MODEL=llama-3.1-8b-instant"
+Environment="GROQ_MODEL_VISION=llama-3.2-11b-vision-preview"
+Environment="BOT_OWNER=Richard"
+
+# Execute the main JARVIS bot
+ExecStart=/usr/bin/python3 /home/riziki/workspace/projects/jarvis/kilo_jarvis.py
+
+# Restart policy
+Restart=always
+RestartSec=10
+StartLimitInterval=60
+StartLimitBurst=5
+
+# Logging
+StandardOutput=append:/home/riziki/workspace/projects/jarvis/jarvis-core.log
+StandardError=append:/home/riziki/workspace/projects/jarvis/jarvis-core-error.log
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=4096
+
+# Security
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/home/riziki/workspace/projects/jarvis
+
+[Install]
+WantedBy=multi-user.target

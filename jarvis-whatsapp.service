@@ -1,0 +1,52 @@
+[Unit]
+Description=JARVIS WhatsApp Handler (Baileys)
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=riziki
+Group=riziki
+WorkingDirectory=/home/riziki/workspace/projects/jarvis
+Environment="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+Environment="HOME=/home/riziki"
+Environment="PYTHONUNBUFFERED=1"
+
+# Load environment variables
+EnvironmentFile=-/home/riziki/.env
+
+# Baileys Configuration
+Environment="BAILEYS_WS_PORT=0"
+Environment="WHATSAPP_API_URL=http://localhost:3000"
+
+# JARVIS Core Configuration
+Environment="GROQ_API_KEY=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"
+Environment="GROQ_MODEL=llama-3.1-8b-instant"
+Environment="BOT_OWNER=Richard"
+
+# Execute the WhatsApp handler (Baileys mode)
+ExecStart=/usr/bin/python3 /home/riziki/workspace/projects/jarvis/whatsapp_handler.py
+
+# Restart policy
+Restart=always
+RestartSec=10
+StartLimitInterval=60
+StartLimitBurst=5
+
+# Logging
+StandardOutput=append:/home/riziki/workspace/projects/jarvis/whatsapp_handler.log
+StandardError=append:/home/riziki/workspace/projects/jarvis/whatsapp_handler_error.log
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=4096
+
+# Security
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/home/riziki/workspace/projects/jarvis
+
+[Install]
+WantedBy=multi-user.target
